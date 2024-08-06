@@ -1,0 +1,602 @@
+Creating Features
+In this chapter, you will explore what feature engineering is and how to get started with applying it to real-world data. You will load, explore and visualize a survey response dataset, and in doing so you will learn about its underlying data types and why they have an influence on how you should engineer your features. Using the pandas package you will create new features from both categorical and continuous columns.
+
+1. Why generate features?
+00:00 - 00:11
+Hello and welcome to Feature Engineering for Machine Learning in Python. My name is Robert O’Callaghan and I am a Data Scientist.
+
+2. Feature Engineering
+00:11 - 00:48
+Feature engineering is the act of taking raw data and extracting features from it that are suitable for tasks like machine learning. Most machine learning algorithms work with tabular data. When we talk about features, we are referring to the information stored in the columns of these tables. For example, if we were looking at information on houses, the features would be things like square foot, number of rooms, etc. This course is designed for data scientists who want to expand their knowledge of how to incorporate feature engineering into their data science workflow.
+
+3. Different types of data
+00:48 - 01:39
+Most machine learning algorithms require their input data to be represented as a vector or a matrix, and many assume that the data is distributed normally. In the real world, more often than not you will receive data that is not in this format. You will also need to work with many different types of data, some data types you will often encounter are: continuous variables, categorical data, ordinal data, boolean values, and dates and times. Dealing with these is manageable, but requires a well thought out approach. Feature engineering is often overlooked in machine learning discussions, but any real-world practitioner will confirm that data manipulation and feature engineering is the most important aspect of the project.
+
+4. Course structure
+01:39 - 02:16
+Over the span of this course, we will be addressing how to deal with many different types of data and how to convert them into a format that can be easily used for machine learning. In the first chapter, you will ingest and create basic features from tabular data. In the second chapter, you will learn how to deal with data that has missing values. You will then move on to transforming your data so that it conforms to statistical assumptions often necessary for machine learning models, and finally, you will convert free form text into tabular data so it can be used with machine learning models.
+
+5. Pandas
+02:16 - 02:48
+Now lets jump straight in with some examples. During this course we will be leveraging the pandas package substantially as it is very useful when working with data in tabular form. It is a common practice to import pandas using the pd alias. You can use the read_csv() function to import a CSV file and use the head() method to quickly look at the first few rows of the DataFrame.
+
+6. Dataset
+02:48 - 03:06
+For the first three chapters of this course, you will be working with a modified subset of the Stackoverflow survey response data. This dataset records the details and preferences of hundreds of users of the StackOverflow website.
+
+7. Column names
+03:06 - 03:17
+To see the features used in this subset, you can use the DataFrame columns attribute to print the names of all the columns in the DataFrame.
+
+8. Column types
+03:17 - 03:32
+To print the data type of each column, you can use the dtypes attribute. Here you can see three different data types - integers, floats and objects - in pandas objects are columns that contain strings.
+
+9. Selecting specific data types
+03:32 - 03:58
+Knowing the types of each column can be very useful if you are performing analysis based on a subset of specific data types. To do this, you can use the select_dtypes() method and pass a list of relevant data types to the include argument. For example, if you want to select only the integer columns, call the select_dtypes() method on df and set the include argument to 'int'.
+
+10. Lets get going!
+03:58 - 04:04
+Lets get right into it and start practicing.
+
+Getting to know your data
+Pandas is one the most popular packages used to work with tabular data in Python. It is generally imported using the alias pd and can be used to load a CSV (or other delimited files) using read_csv().
+
+You will be working with a modified subset of the Stackoverflow survey response data in the first three chapters of this course. This dataset records the details, and preferences of thousands of users of the StackOverflow website.
+
+Instructions 1/4
+Import the pandas library as pd.
+so_survey_csv contains the URL to a CSV file. Import it using Pandas into so_survey_df.
+Print the first five rows of so_survey_df.
+Print the data type of each column in so_survey_df.
+
+# Import pandas
+import pandas as pd
+
+# Import so_survey_csv into so_survey_df
+so_survey_df = pd.read_csv(so_survey_csv)
+
+# Print the first five rows of the DataFrame
+print(so_survey_df.head())
+
+# Print the data type of each column
+print(so_survey_df.dtypes)
+
+Selecting specific data types
+Often a dataset will contain columns with several different data types (like the one you are working with). The majority of machine learning models require you to have a consistent data type across features. Similarly, most feature engineering techniques are applicable to only one type of data at a time. For these reasons among others, you will often want to be able to access just the columns of certain types when working with a DataFrame.
+
+The DataFrame (so_survey_df) from the previous exercise is available in your workspace.
+
+Instructions
+Create a subset of so_survey_df consisting of only the numeric (int and float) columns.
+Print the column names contained in so_survey_df_num.
+
+# Create subset of only the numeric columns
+so_numeric_df = so_survey_df.select_dtypes(include=['int', 'float'])
+
+# Print the column names contained in so_survey_df_num
+print(so_numeric_df.columns)
+
+Well done! In the next lesson, you will learn the most common ways of dealing with categorical data.
+
+1. Dealing with Categorical Variables
+00:00 - 00:00
+Categorical variables are used to represent groups that are qualitative in nature. Some examples are colors, such as blue, red, black etc. or country of birth, such as Ireland, England or USA. While these can easily be understood by a human, you will need to encode categorical features as numeric values to use them in your machine learning models.
+
+2. Encoding categorical features
+00:00 - 00:00
+As an example, here is a table which consists of the country of residence of different respondents in the Stackoverflow survey. To get from qualitative inputs to quantitative features, one may naively think that assigning every category in a column a number would suffice, for example India could be 1, USA 2 etc. But these categories are unordered, so assigning this order may greatly penalize the effectiveness of your model. Thus, you cannot allocate arbitrary numbers to each category as that would imply some form of ordering in the categories.
+
+3. Encoding categorical features
+00:00 - 00:00
+Instead, values can be encoded by creating additional binary features corresponding to whether each value was picked or not as shown in the table on the right. In doing so your model can leverage the information of what country is given, without inferring any order between the different options.
+
+4. Encoding categorical features
+00:00 - 00:00
+There are two main approaches when representing categorical columns in this way, one hot encoding and dummy encoding. These are very similar and often confused. In fact, by default, pandas performs one-hot encoding when you use the get_dummies() function.
+
+5. One-hot encoding
+00:00 - 00:00
+One-hot encoding converts n categories into n features as shown here. You can use the get_dummies() function to one-hot encode columns. The function takes a DataFrame and a list of categorical columns you want converted into one hot encoded columns, and returns an updated DataFrame with these columns included. Specifying a prefix with the prefix argument can improve readability like the letter C for country has been used here.
+
+6. Dummy encoding
+00:00 - 00:00
+On the other hand, dummy encoding creates n-1 features for n categories, omitting the first category. Notice that this time there is no feature for France, the first category. In dummy encoding, the base value, France in this case, is encoded by the absence of all other countries as you can see on the last row here and its value is represented by the intercept. For dummy encoding, you can use the same get_dummies() function with an additional argument, drop_first set to True as shown here.
+
+7. One-hot vs. dummies
+00:00 - 00:00
+Both these methods have different advantages. One-hot encoding generally creates much more explainable features, as each country will have its own weight that can be observed after training. But one must be aware that one hot encoding may create features that are entirely collinear due to the same information being represented multiple times.
+
+8. One-hot vs. dummies
+00:00 - 00:00
+Take for example a simpler categorical column recording the sex of the survey takers. By recording a 1 for male the information of whether the person is female is already known when the male column is 0. This double representation can lead to instability in your models and dummy values would be more appropriate.
+
+9. Limiting your columns
+00:00 - 00:00
+However, both one-hot encoding and dummy encoding may result in a huge number of columns being created if there are too many different categories in a column. In these cases, you may want to only create columns for the most common values. You can check the number of occurrences of different features in a column using the value_counts() method on a specific column.
+
+10. Limiting your columns
+00:00 - 00:00
+Once you have your counts of occurrences, you can use it to limit what values you will include by first creating a mask of the values that occur less than n times. A mask is a list of booleans outlining which values in a column should be affected. First we find the categories that occur less than n times using the index attribute and wrap this inside the isin() method. After you create the mask, you can use it to replace these categories that occur less than n times with a value of your choice as shown here.
+
+11. Now you deal with categorical variables
+00:00 - 00:00
+Lets put what has been learned into practice and work with some categorical variables.
+
+One-hot encoding and dummy variables
+To use categorical variables in a machine learning model, you first need to represent them in a quantitative way. The two most common approaches are to one-hot encode the variables using or to use dummy variables. In this exercise, you will create both types of encoding, and compare the created column sets. We will continue using the same DataFrame from previous lesson loaded as so_survey_df and focusing on its Country column.
+
+Instructions 1/2
+One-hot encode the Country column, adding "OH" as a prefix for each column.
+Create dummy variables for the Country column, adding "DM" as a prefix for each column.
+
+# Convert the Country column to a one hot encoded Data Frame
+one_hot_encoded = pd.get_dummies(so_survey_df, columns=['Country'], prefix='OH')
+
+# Print the columns names
+print(one_hot_encoded.columns)
+
+Create dummy variables for the Country column, adding "DM" as a prefix for each column.
+
+# Create dummy variables for the Country column
+dummy = pd.get_dummies(so_survey_df, columns=['Country'], drop_first=True, prefix='DM')
+
+# Print the columns names
+print(dummy.columns)
+
+Great job! Did you notice that the column for France was missing when you created dummy variables? Now you can choose to use one-hot encoding or dummy variables where appropriate.
+
+Dealing with uncommon categories
+Some features can have many different categories but a very uneven distribution of their occurrences. Take for example Data Science's favorite languages to code in, some common choices are Python, R, and Julia, but there can be individuals with bespoke choices, like FORTRAN, C etc. In these cases, you may not want to create a feature for each value, but only the more common occurrences.
+
+Extract the Country column of so_survey_df as a series and assign it to countries.
+Find the counts of each category in the newly created countries series.
+Create a mask for values occurring less than 10 times in country_counts.
+Print the first 5 rows of the mask.
+Label values occurring less than the mask cutoff as 'Other'.
+Print the new category counts in countries.
+
+# Create a series out of the Country column
+countries = so_survey_df['Country']
+
+# Get the counts of each category
+country_counts = countries.value_counts()
+
+# Create a mask for only categories that occur less than 10 times
+mask = countries.isin(country_counts[country_counts < 10].index)
+
+# Label all other categories as Other
+countries[mask] = 'Other'
+
+# Print the updated category counts
+print(pd.value_counts(countries))
+
+Good work, now you can work with large datasets while grouping low frequency categories.
+
+1. Numeric variables
+00:00 - 00:00
+As mentioned in the previous lesson, most machine learning models will require your data to be in numeric format. However, even if your raw data is all numeric, there is still a lot you can do to improve your features.
+
+2. Types of numeric features
+00:00 - 00:00
+Numeric features can be used to represent a huge array of different characteristics and measurements. Pretty much anything that can be quantitatively measured can be recorded as numeric data. For example, age, the price of an item, counts, and even spatial data such as coordinates. Depending on the use case, numeric features can be treated in several different ways. We will work through a few of the considerations and possible feature engineering steps to keep in mind when dealing with numeric data.
+
+3. Does size matter?
+00:00 - 00:00
+One of the first questions you should ask when working with numeric features is whether the magnitude of the feature is its most important trait, or just its direction. For example, if you had a dataset of restaurant health and safety ratings containing the number of times a restaurant had major violations, you might care far more about whether the restaurant had any major violations at all (as you would rather not take any chances), over whether it was a repeat offender. Looking at this toy dataset containing restaurant IDs and the number of times they had major violations, we can see that some restaurants have no major violations but many have one or more. We will be creating a new binary column representing whether or not a restaurant committed any violation.
+
+4. Binarizing numeric variables
+00:00 - 00:00
+Here we first create a new column Binary_Violation and set it to zero. Then, we use the dot loc notation to find all rows where Number_of_Violations is greater than zero and set the Binary_Violation column to 1.
+
+5. Binarizing numeric variables
+00:00 - 00:00
+As you can see here, all rows where Number_of_Violations is equal to 0 are also zeros in Binary_Violation. However, for all rows where Number_of_Violations is greater than zero is 1 in Binary_Violation.
+
+6. Binning numeric variables
+00:00 - 00:00
+An extension of this is perhaps you wish to group a numeric variable into more than two bins. This is often useful for variables such as age, wage brackets, etc where exact numbers are less relevant than the general magnitude of the value. Consider the same dataset of restaurant health and safety ratings containing the number of times a restaurant has had major violations. This time we will be creating three groups, Group 1, for restaurants with no offenses, Group 2 for restaurants with one or two offenses and group 3 for all restaurants with three or more offenses. Bins are created by using the pandas' cut() function. You can define the intervals using the bins argument as shown here, which in this case is a list of 4 values. You can also pass a list of labels like so.
+
+7. Binning numeric variables
+00:00 - 00:00
+Note as we want to include 0 in the first bin, we must set the leftmost edge to lower than that, so all values between negative infinity and 0 are labeled as 1, all values equal to 1 or 2 are labeled as 2, and values greater than 2 are labeled as 3.
+
+8. Lets start practicing!
+00:00 - 00:00
+Now you know how to binarize and bin numeric columns, it's time for you to put this into practice.
+
+Binarizing columns
+While numeric values can often be used without any feature engineering, there will be cases when some form of manipulation can be useful. For example on some occasions, you might not care about the magnitude of a value but only care about its direction, or if it exists at all. In these situations, you will want to binarize a column. In the so_survey_df data, you have a large number of survey respondents that are working voluntarily (without pay). You will create a new column titled Paid_Job indicating whether each person is paid (their salary is greater than zero).
+
+Instructions
+Create a new column called Paid_Job filled with zeros.
+Replace all the Paid_Job values with a 1 where the corresponding ConvertedSalary is greater than 0.
+
+# Create the Paid_Job column filled with zeros
+so_survey_df['Paid_Job'] = 0
+
+# Replace all the Paid_Job values where ConvertedSalary is > 0
+so_survey_df.loc[so_survey_df['ConvertedSalary'] > 0, 'Paid_Job'] = 1
+
+# Print the first five rows of the columns
+print(so_survey_df[['Paid_Job', 'ConvertedSalary']].head())
+
+Good work, binarizing columns can also be useful for your target variables.
+
+Binning values
+For many continuous values you will care less about the exact value of a numeric column, but instead care about the bucket it falls into. This can be useful when plotting values, or simplifying your machine learning models. It is mostly used on continuous variables where accuracy is not the biggest concern e.g. age, height, wages.
+
+Bins are created using pd.cut(df['column_name'], bins) where bins can be an integer specifying the number of evenly spaced bins, or a list of bin boundaries.
+
+Instructions 1/2
+Bin the value of the ConvertedSalary column in so_survey_df into 5 equal bins, in a new column called equal_binned.
+Bin the ConvertedSalary column using the boundaries in the list bins and label the bins using labels.
+
+# Create the Paid_Job column filled with zeros
+so_survey_df['Paid_Job'] = 0
+
+# Replace all the Paid_Job values where ConvertedSalary is > 0
+so_survey_df.loc[so_survey_df['ConvertedSalary'] > 0, 'Paid_Job'] = 1
+
+# Print the first five rows of the columns
+print(so_survey_df[['Paid_Job', 'ConvertedSalary']].head())
+
+# Import numpy
+import numpy as np
+
+# Specify the boundaries of the bins
+bins = [-np.inf, 10000, 50000, 100000, 150000, np.inf]
+
+# Bin labels
+labels = ['Very low', 'Low', 'Medium', 'High', 'Very high']
+
+# Bin the continuous variable ConvertedSalary using these boundaries
+so_survey_df['boundary_binned'] = pd.cut(so_survey_df['ConvertedSalary'], 
+                                         bins, labels = labels)
+
+# Print the first 5 rows of the boundary_binned column
+print(so_survey_df[['boundary_binned', 'ConvertedSalary']].head())
+
+Correct, now you can bin columns with equal spacing and predefined boundaries.
+
+1. Why do missing values exist?
+00:00 - 00:17
+In the first chapter, we looked at the different types of data one may find when analyzing data. In this lesson, we will explore the concept of messy and missing values, how to find them, and once identified, how to deal with them.
+
+2. How gaps in data occur
+00:17 - 01:02
+While in an ideal world every dataset you come across would be perfectly complete and contain no gaps, unfortunately, this is rarely the case. Real world data often has noise or omissions. This can stem from many sources, for example: Data not being collected properly (paper surveys not being filled out fully). Collection and management errors (someone transcribing the data making a mistake). Data intentionally being omitted (people may want to skip the age box in an online form). Or gaps could be created due to transformations of the data (average of a field with missing data). This list is far from comprehensive.
+
+3. Why we care?
+01:02 - 01:49
+You may wonder why are we discussing this? Does missing data even matter? Yes, it does, and it is extremely important to identify and deal with missing data. Many machine learning models cannot work with missing values, for example if you were performing linear regression, you would need a value for every row and column used in your dataset. Missing data may be indicative of a problem in your data pipeline. If data is consistently missing in a certain column, you should investigate as to why this is the case. Missing data may provide information in itself. For example, if the number of children of a person is missing they may have no children.
+
+4. Missing value discovery
+01:49 - 02:19
+You can use the info() method to have a preliminary look at how complete the dataset is. Right from the get go you can see that the StackOverflowJobsRecommend, Gender, and RawSalary columns are highly underpopulated and we should examine where these missing values occur. This list output is useful but becomes limited with larger datasets that have missing values scattered all over their features.
+
+5. Finding missing values
+02:19 - 02:32
+To find where these missing values exist, you can use the isnull() method as shown here. All cells where missing values exist are shown as True.
+
+6. Finding missing values
+02:32 - 02:42
+You can also count the number of missing values in a specific column by chaining the isnull() and sum() methods as shown here.
+
+7. Finding non-missing values
+02:42 - 03:05
+The inverse (or the non missing values) can also be found using the notnull() method. Here, all missing values are shown as False. Note that you can call the isnull() and notnull() methods on both the DataFrame as a whole, and on each of it's individual columns.
+
+8. Go ahead and find missing values!
+03:05 - 03:14
+It's time for you to find missing values in the Stackoverflow data!
+
+How sparse is my data?
+Most datasets contain missing values, often represented as NaN (Not a Number). If you are working with Pandas you can easily check how many missing values exist in each column.
+
+Let's find out how many of the developers taking the survey chose to enter their age (found in the Age column of so_survey_df) and their gender (Gender column of so_survey_df).
+
+Instructions
+Subset the DataFrame to only include the 'Age' and 'Gender' columns.
+Print the number of non-missing values in both columns.
+
+# Subset the DataFrame
+sub_df = so_survey_df[['Age', 'Gender']]
+
+# Print the number of non-missing values
+print(sub_df.info())
+
+Correct, there are 693 non-missing entries in the Gender column.
+
+Finding the missing values
+While having a summary of how much of your data is missing can be useful, often you will need to find the exact locations of these missing values. Using the same subset of the StackOverflow data from the last exercise (sub_df), you will show how a value can be flagged as missing.
+
+Instructions
+1
+Print the first 10 entries of the DataFrame.
+2
+Print the locations of the missing values in the first 10 rows.
+3
+Print the locations of the non-missing values in the first 10 rows.
+
+# Print the top 10 entries of the DataFrame
+print(sub_df.head(10))
+
+# Print the locations of the missing values
+print(sub_df.head(10).isnull())
+
+# Print the locations of the non-missing values
+print(sub_df.head(10).notnull())
+
+Well done, finding where the missing values exist can often be important.
+
+1. Dealing with missing values (I)
+00:00 - 00:10
+Now that you can recognize why missing values occur and how to locate them, you need to know how they can be dealt with.
+
+2. Listwise deletion
+00:10 - 00:51
+If you are confident that the missing values in your dataset are occurring at random, (in other words not being intentionally omitted) the most effective and statistically sound approach to dealing with them is called 'complete case analysis' or listwise deletion. In this method, a record is fully excluded from your model if any of its values are missing. Take for example the dataset shown here. Although most of the information is available in the first and third rows, because values in the ConvertedSalary column are missing, these rows will be dropped.
+
+3. Listwise deletion in Python
+00:51 - 01:06
+To implement listwise deletion using pandas, you can use the dropna() method, by setting the how argument to 'any'. This will delete all rows with at least one missing value.
+
+4. Listwise deletion in Python
+01:06 - 01:22
+On the other hand, if you want to delete rows with missing values in only a specific column, you can use the subset argument. Pass a list of columns to this argument to specify which columns to consider when deleting rows.
+
+5. Issues with deletion
+01:22 - 01:54
+While the preferable approach in situations where missing data occurs purely at random is listwise deletion, it does have its drawbacks. First, it deletes perfectly valid data points that share a row with a missing value. Second, if the missing values do not occur entirely at random it can negatively affect the model. Lastly, if you were to remove a feature instead of a row it can reduce the degrees of freedom of your model.
+
+6. Replacing with strings
+01:54 - 02:30
+The most common way to deal with missing values is to simply fill these values using the fillna() method. To use the fillna() method on a specific column, you need to provide the value you want to replace the missing values with. In the case of categorical columns, it is common to replace missing values with strings like 'Other', 'Not Given' etc. To replace the missing values in place, in other words to modify the original DataFrame, you need to set the inplace argument to True.
+
+7. Recording missing values
+02:30 - 03:13
+In situations where you believe that the absence or presence of data is more important than the values themselves, you can create a new column that records the absence of data and then drop the original column. To do this, all you need to do is call the notnull() method on a specific column. This will output a list of True/False values, thus recording the presence/absence of data. To drop columns from a DataFrame, you can use the drop() method and specify a list of column names which you want to drop as the columns argument.
+
+8. Practice time
+03:13 - 03:26
+With this in mind you will now work through applying listwise deletion, and some alternatives for replacing missing values in categorical columns.
+
+Listwise deletion
+The simplest way to deal with missing values in your dataset when they are occurring entirely at random is to remove those rows, also called 'listwise deletion'.
+
+Depending on the use case, you will sometimes want to remove all missing values in your data while other times you may want to only remove a particular column if too many values are missing in that column.
+
+Instructions 1/4
+Print the number of rows and columns in so_survey_df.
+Drop all rows with missing values in so_survey_df.
+Drop all columns with missing values in so_survey_df.
+Drop all rows in so_survey_df where 'Gender' is missing.
+
+# Print the number of rows and columns
+print(so_survey_df.shape)
+
+# Create a new DataFrame dropping all incomplete rows
+no_missing_values_rows = so_survey_df.dropna(how='any')
+
+# Print the shape of the new DataFrame
+print(no_missing_values_rows.shape)
+
+# Create a new DataFrame dropping all columns with incomplete rows
+no_missing_values_cols = so_survey_df.dropna(how='any', axis=1)
+
+# Print the shape of the new DataFrame
+print(no_missing_values_cols.shape)
+
+# Drop all rows where Gender is missing
+no_gender = so_survey_df.dropna(subset=['Gender'])
+
+# Print the shape of the new DataFrame
+print(no_gender.shape)
+
+Correct, as you can see dropping all rows that contain any missing values may greatly reduce the size of your dataset. So you need to think carefully and consider several trade-offs when deleting missing values.
+
+Replacing missing values with constants
+While removing missing data entirely maybe a correct approach in many situations, this may result in a lot of information being omitted from your models.
+
+You may find categorical columns where the missing value is a valid piece of information in itself, such as someone refusing to answer a question in a survey. In these cases, you can fill all missing values with a new category entirely, for example 'No response given'.
+
+Instructions 1/2
+Print the count of occurrences of each category in so_survey_df's Gender column.
+
+# Print the count of occurrences
+print(so_survey_df['Gender'].value_counts())
+
+# Replace missing values
+so_survey_df['Gender'].fillna(value = 'Not Given', inplace = True)
+
+# Print the count of each value
+print(so_survey_df['Gender'].value_counts())
+
+Wonderful! By filling in these missing values you can use the columns in your analyses.
+
+1. Fill continuous missing values
+00:00 - 00:15
+While listwise deletion is often the most statistically sound method of dealing with missing values in cases where you believe the gaps are at random, this will often not be feasible in real world use cases.
+
+2. Deleting missing values
+00:15 - 00:41
+One of the most common issues with removing all rows with missing values is if you were building a predictive model. If you were to remove all cases that had missing values when training your model, you would quickly run into problems when you received missing values in your test set, where you do not have the option of just not predicting these rows.
+
+3. What else can you do?
+00:41 - 01:11
+So what's the alternative? Replacing missing values. For categorical columns, as you saw in the last lesson you can either replace missing values with a string that flags missing values such as 'None', or you can use the most common occurring value. However, for numeric columns, you may want to replace missing values with a more suitable value. So what is a suitable value?
+
+4. Measures of central tendency
+01:11 - 01:50
+In cases like this we often turn to the measures of central tendency, which are the central or typical value for a distribution. The most commonly used values are the mean and the median. One caveat that you must keep in mind when using these methods is that it can lead to biased estimates of the variances and covariances of the features. Similarly, the standard error and test statistics can be incorrectly estimated so if these metrics are needed they should be calculated before the missing values have been filled.
+
+5. Calculating the measures of central tendency
+01:50 - 02:07
+You can calculate these measures directly from a pandas series by simply calling the required method on the series as shown here. Note that the missing values are excluded by default when calculating these statistics.
+
+6. Fill the missing values
+02:07 - 02:41
+Then leveraging what you implemented in previous lesson, you can directly fill all missing values using the fillna() method. Only this time you are filling missing values in the ConvertedSalary column with the mean of this column. Since you filled in the missing values with the mean, you may end up with too many decimal places. You can get rid of all the decimal values by changing the data type to integer using the astype() method like so.
+
+7. Rounding values
+02:41 - 02:49
+or you can first round the mean before filling in the missing values as shown here.
+
+8. Let's Practice!
+02:49 - 02:57
+Now its your turn to put what you have learned into practice.
+
+Filling continuous missing values
+In the last lesson, you dealt with different methods of removing data missing values and filling in missing values with a fixed string. These approaches are valid in many cases, particularly when dealing with categorical columns but have limited use when working with continuous values. In these cases, it may be most valid to fill the missing values in the column with a value calculated from the entries present in the column.
+
+Instructions 1/3
+Print the first five rows of the StackOverflowJobsRecommend column of so_survey_df.
+
+# Print the first five rows of StackOverflowJobsRecommend column
+print(so_survey_df['StackOverflowJobsRecommend'].head(5))
+
+Replace the missing values in the StackOverflowJobsRecommend column with its mean. Make changes directly to the original DataFrame.
+
+# Fill missing values with the mean
+so_survey_df['StackOverflowJobsRecommend'].fillna(so_survey_df['StackOverflowJobsRecommend'].mean(), inplace=True)
+
+# Print the first five rows of StackOverflowJobsRecommend column
+print(so_survey_df['StackOverflowJobsRecommend'].head())
+
+Round the decimal values that you introduced in the StackOverflowJobsRecommend column.
+
+# Fill missing values with the mean
+so_survey_df['StackOverflowJobsRecommend'].fillna(so_survey_df['StackOverflowJobsRecommend'].mean(), inplace=True)
+
+# Round the StackOverflowJobsRecommend values
+so_survey_df['StackOverflowJobsRecommend'] = round(so_survey_df['StackOverflowJobsRecommend'])
+
+# Print the top 5 rows
+print(so_survey_df['StackOverflowJobsRecommend'].head())
+
+Nicely done, remember you should only round your values if you are certain it is applicable.
+
+Imputing values in predictive models
+When working with predictive models you will often have a separate train and test DataFrames. In these cases you want to ensure no information from your test set leaks into your train set. When filling missing values in data to be used in these situations how should approach the two datasets?
+
+Correct, values calculated on the train test should be applied to both DataFrames.
+
+1. Dealing with other data issues
+00:00 - 00:37
+Up to this point you have used multiple approaches to creating and updating features when missing values are present in the data, but data issues are of course not limited to just this. In some instances, you will come across features that need to be updated in some other way. Take for example the case of a column containing a monetary value. If this dataset has been imported from excel it may contain characters such as currency signs or commas that prevents pandas from reading it as numeric values.
+
+2. Bad characters
+00:37 - 00:52
+For example, lets look at the data type of the RawSalary column. It's an object, although intuitively, you know that it should be numeric. So why is that?
+
+3. Bad characters
+00:52 - 01:03
+Let's take a quick peek at the data. Numeric columns should not contain any non-numeric characters. So you need to remove these commas.
+
+4. Dealing with bad characters
+01:03 - 03:41
+Although you want the column to be a numeric column, it is of type object, which means you can use string methods to fix this column. In this case, we want to remove all occurrences of comma. We can easily achieve this by accessing the str accessor and using the replace() method. The first argument is the string you want to replace, which is the comma, and the second argument is the string you want to replace it with, which here is an empty string, which simply means you want to remove all the commas. However, the data type of this column is still object. Now you can convert your column to the relevant type as shown here.
+
+5. Finding other stray characters
+00:00 - 02:31
+But what if attempting to change the data type raises an error? This may indicate that there are additional stray characters which you didn't account for. Instead of manually searching for values with other stray characters you can use the to_numeric() function from pandas along with the errors argument. If you set the errors argument to 'coerce', Pandas will convert the column to numeric, but all values that can't be converted to numeric will be changed to NaNs, that is missing values.
+
+6. Finding other stray characters
+02:31 - 02:47
+You can now use the isna() method like you did earlier to find out which values failed to parse. So it looks like we also have dollar signs. You can again use the replace() method as before to remove the dollar signs.
+
+7. Chaining methods
+02:47 - 03:31
+Before you get going onto trying these for yourself, it will be useful to delve a little deeper into method chaining. If you are applying different methods or in fact the same method several times on a column, instead of assigning the result back to the column after each iteration, you can simply chain the methods, that is, call one method after the other to obtain the desired result. For example, cleaning up characters, changing the data type, normalizing the values etc. can all be achieved by simply calling the methods one after the other as seen here.
+
+8. Go ahead and fix bad characters!
+03:31 - 03:41
+Now that you know how to deal with stray characters, let's put it into practice.
+
+Dealing with stray characters (I)
+In this exercise, you will work with the RawSalary column of so_survey_df which contains the wages of the respondents along with the currency symbols and commas, such as $42,000. When importing data from Microsoft Excel, more often that not you will come across data in this form.
+
+Instructions 1/2
+Remove the commas (,) from the RawSalary column.
+Remove the dollar ($) signs from the RawSalary column.
+
+# Remove the commas in the column
+so_survey_df['RawSalary'] = so_survey_df['RawSalary'].str.replace(',', '')
+
+# Remove the dollar signs in the column
+so_survey_df['RawSalary'] = so_survey_df['RawSalary'].str.replace('$','')
+
+Congratulations! Replacing/removing specific characters is a very useful skill.
+
+Dealing with stray characters (II)
+In the last exercise, you could tell quickly based off of the df.head() call which characters were causing an issue. In many cases this will not be so apparent. There will often be values deep within a column that are preventing you from casting a column as a numeric type so that it can be used in a model or further feature engineering.
+
+One approach to finding these values is to force the column to the data type desired using pd.to_numeric(), coercing any values causing issues to NaN, Then filtering the DataFrame by just the rows containing the NaN values.
+
+Try to cast the RawSalary column as a float and it will fail as an additional character can now be found in it. Find the character and remove it so the column can be cast as a float.
+
+Instructions 1/2
+Attempt to convert the RawSalary column of so_survey_df to numeric values coercing all failures into null values.
+Find the indexes of the rows containing NaNs.
+Print the rows in RawSalary based on these indexes.
+
+# Attempt to convert the column to numeric values
+numeric_vals = pd.to_numeric(so_survey_df['RawSalary'], errors='coerce')
+
+# Find the indexes of missing values
+idx = numeric_vals.isna()
+
+# Print the relevant rows
+print(so_survey_df['RawSalary'][idx])
+
+Did you notice the pound (£) signs in the RawSalary column? Remove these signs like you did in the previous exercise.
+Convert the RawSalary column to float.
+
+# Replace the offending characters
+so_survey_df['RawSalary'] = so_survey_df['RawSalary'].str.replace('£','')
+
+# Convert the column to float
+so_survey_df['RawSalary'] = so_survey_df['RawSalary'].astype('float')
+
+# Print the column
+print(so_survey_df['RawSalary'])
+
+Nicely done! Remember that even after removing all the relevant characters, you still need to change the type of the column to numeric if you want to plot these continuous values.
+
+Method chaining
+When applying multiple operations on the same column (like in the previous exercises), you made the changes in several steps, assigning the results back in each step. However, when applying multiple successive operations on the same column, you can "chain" these operations together for clarity and ease of management. This can be achieved by calling multiple methods sequentially:
+
+# Method chaining
+df['column'] = df['column'].method1().method2().method3()
+
+# Same as 
+df['column'] = df['column'].method1()
+df['column'] = df['column'].method2()
+df['column'] = df['column'].method3()
+In this exercise you will repeat the steps you performed in the last two exercises, but do so using method chaining.
+
+Instructions
+100 XP
+Remove the commas (,) from the RawSalary column of so_survey_df.
+Remove the dollar ($) signs from the RawSalary column.
+Remove the pound (£) signs from the RawSalary column.
+Convert the RawSalary column to float.
+
+# Use method chaining
+so_survey_df['RawSalary'] = so_survey_df['RawSalary']\
+                              .str.replace(',','')\
+                              .str.replace('$','')\
+                              .str.replace('£','')\
+                              .astype('float')
+ 
+# Print the RawSalary column
+print(so_survey_df['RawSalary'])
+
+Great job! Custom functions can be also used when method chaining using the .apply() method.
+
+
+
+
